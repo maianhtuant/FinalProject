@@ -136,7 +136,7 @@
         <repository>
             <id>cisc191</id>
             <name>CISC191 Maven Repo</name>
-            <url>https://maven.pkg.github.com/MiramarCISC/CISC191-TEMPLATE</url>
+            <url>https://maven.pkg.github.com/MiramarCISC/CISC191-c</url>
         </repository>
     </distributionManagement>
 </project>
