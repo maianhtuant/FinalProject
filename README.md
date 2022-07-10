@@ -7,6 +7,7 @@ Intermediate Java Programming Group A
 
 ## Running
 java -jar Server-1.0.0.jar  
+Please default port is 4445, input it when Server ask.
 java -jar Client-1.0.0.jar
 ## Common Module
 Shared classes between client and server modules.
