@@ -4,6 +4,7 @@ Intermediate Java Programming Group A
 1. Maven
 2. Git
 3. JDK17
+4. JavaFX 18.0.1
 
 ## Running
 java -jar Server-1.0.0.jar  
