@@ -3,12 +3,11 @@ Intermediate Java Programming Group A
 ## Prerequisites
 1. Maven
 2. Git
-3. JDK14
-## Building
-mvn clean install
+3. JDK17
+
 ## Running
-java -jar Server/target/Server-1.0.0.jar  
-java -jar Client/target/Client-1.0.0.jar
+java -jar Server-1.0.0.jar  
+java -jar Client-1.0.0.jar
 ## Common Module
 Shared classes between client and server modules.
 ## Server Module
