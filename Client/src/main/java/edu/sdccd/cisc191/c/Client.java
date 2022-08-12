@@ -1,6 +1,5 @@
 package edu.sdccd.cisc191.c;
 
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,11 +14,11 @@ import javax.sound.sampled.Port;
 
 public class Client {
 	
-	static int port = 4445;
+	static int port = 4446;
 	
 	//method insertMaterial with parameters(Material, price, color, quality) for insert new marterial detail to Server.
 	public ArrayList<MaterialDetail> insertMaterial(MaterialDetail materialDetail) throws IOException, ClassNotFoundException {
-		Socket socket = new Socket("localhost", 4445);
+		Socket socket = new Socket("localhost", port);
 		ArrayList<MaterialDetail> list = new ArrayList<MaterialDetail>();
 		
 		DataOutputStream dataToServer = new DataOutputStream(socket.getOutputStream());
@@ -28,8 +27,7 @@ public class Client {
 		ObjectOutputStream objToServer = new ObjectOutputStream(socket.getOutputStream());
 		try {
 			objToServer.writeObject(materialDetail);
-			ObjectInputStream objFromServer = new ObjectInputStream(socket.getInputStream());
-			list = (ArrayList<MaterialDetail>) objFromServer.readObject();
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -41,7 +39,7 @@ public class Client {
 	
 	//Method getAllMaterial for get all material in Server.
 	public ArrayList<MaterialDetail> getAllMaterial() throws UnknownHostException, IOException {
-		Socket socket = new Socket("localhost", 4445);
+		Socket socket = new Socket("localhost", port);
 		ArrayList<MaterialDetail> list = new ArrayList<MaterialDetail>();
 		DataOutputStream dataToServer = new DataOutputStream(socket.getOutputStream());
 		dataToServer.write(102);
@@ -62,7 +60,7 @@ public class Client {
 	
 	//Method findMaterial return ArrayList MaterialDetail with parameter text that we can find by name or id.
 	public ArrayList<MaterialDetail> findMaterial(String text) throws Exception {
-		Socket socket = new Socket("localhost", 4445);
+		Socket socket = new Socket("localhost", port);
 		
 		ArrayList<MaterialDetail> returnList = new ArrayList<MaterialDetail>();
 		DataOutputStream dataToServer = new DataOutputStream(socket.getOutputStream());
@@ -79,18 +77,33 @@ public class Client {
 	}
 	
 	//Method deleteItem return 0 or 1, 1 is successful and 0 is can't delete. With Parameter index
-	public int deleteItem(int index) throws Exception {
-		Socket socket = new Socket("localhost", 4445);
+	public int deleteItem(String getID) throws Exception {
+		Socket socket = new Socket("localhost", port);
 		DataOutputStream dataToServer = new DataOutputStream(socket.getOutputStream());
 		dataToServer.write(100);
 		ObjectOutputStream objToServer = new ObjectOutputStream(socket.getOutputStream());
-		objToServer.write(index);
+		objToServer.writeUTF(getID);
 		objToServer.flush();
 		DataInputStream dataFromServer = new DataInputStream(socket.getInputStream());
 		int message = dataFromServer.read();
 		
 		socket.close();
 		return message;
+	}
+	
+	public int modifiedItem(MaterialDetail material) throws UnknownHostException, IOException {
+		Socket socket = new Socket("localhost", port);
+		int r = 0;
+		DataOutputStream dataToServer = new DataOutputStream(socket.getOutputStream());
+		dataToServer.write(104);
+		ObjectOutputStream objToServer = new ObjectOutputStream(socket.getOutputStream());
+		objToServer.writeObject(material);
+		
+		DataInputStream dataFromServer = new DataInputStream(socket.getInputStream());
+		r = dataFromServer.read();
+		socket.close();
+		
+		return r;
 	}
 	
 	
@@ -100,12 +113,10 @@ public class Client {
 		Scanner scan = new Scanner(System.in);
 		
 		ArrayList<MaterialDetail> returnList = new ArrayList<MaterialDetail>();
-		System.out.println("Input your request: (Write, ReadAll, Delete, Search, or Stop)");
+		System.out.println("Input your request: (Write, ReadAll, Delete, Search, Edit or Stop)");
 		String request = scan.nextLine();
 		while(!request.equals("Stop")) {
 			if(request.equals("Write")) {
-				
-				
 				returnList = client.insertMaterial(client.writeMaterial());
 				for(MaterialDetail c:returnList) {
 					System.out.println(c.toString());
@@ -116,8 +127,8 @@ public class Client {
 					System.out.println(c.toString());
 				}
 			}else if(request.equals("Delete")) {
-				System.out.println("input line: ");
-				int index = scan.nextInt();
+				System.out.println("input id: ");
+				String index = scan.next();
 				int mess = 0;
 				mess = client.deleteItem(index);
 				if(mess == 1) {
@@ -131,6 +142,13 @@ public class Client {
 				returnList = client.findMaterial(text);
 				for(MaterialDetail c:returnList) {
 					System.out.println(c.toString());
+				}
+			}else if(request.equals("Edit")) {
+				int num = client.modifiedItem(client.writeMaterial());
+				if(num==1) {
+					System.out.println("Update successfully");
+				}else {
+					System.out.println("Check your fields");
 				}
 			}
 			System.out.println("Input your next request: (Write, ReadAll, Delete, Search, or Stop)");
@@ -153,8 +171,8 @@ public class Client {
 		String color = scanner.nextLine();
 		System.out.println("Input quality: ");
 		int quality = Integer.parseInt(scanner.nextLine());
-		Material m = new Material(id, name);
-		MaterialDetail detail = new MaterialDetail(m, price, color, quality);
+		
+		MaterialDetail detail = new MaterialDetail(id, name, price, color, quality);
 		return detail;
 	}
 }

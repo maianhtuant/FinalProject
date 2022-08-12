@@ -1,16 +1,19 @@
 package edu.sdccd.cisc191.c;
 
 import java.io.Serializable;
-import edu.sdccd.cisc191.c.Material;
-public class MaterialDetail implements Serializable {
-	private Material material;
+
+import javax.persistence.*;
+
+
+public class MaterialDetail extends Material implements Serializable {
+
 	private double price;
+
 	private String color;
+
 	private int quality;
 	
-	public void setMaterial(Material material) {
-		this.material = material;
-	}
+	
 	public void setPrice(double price) {
 		this.price = price;
 	}
@@ -20,9 +23,7 @@ public class MaterialDetail implements Serializable {
 	public void setQuality(int quality) {
 		this.quality = quality;
 	}
-	public Material getMaterial() {
-		return material;
-	}
+	
 	public double getPrice() {
 		return price;
 	}
@@ -45,9 +46,9 @@ public class MaterialDetail implements Serializable {
 	public MaterialDetail() {
 		// TODO Auto-generated constructor stub
 	}
-	public MaterialDetail(Material _m, double _price, String _color, int _quality) {
+	public MaterialDetail(String id, String name, double _price, String _color, int _quality) {
 		// TODO Auto-generated constructor stub
-		this.material = _m;
+		super(id, name);
 		this.price = _price;
 		this.color = _color;
 		this.quality = _quality;
@@ -56,15 +57,14 @@ public class MaterialDetail implements Serializable {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		String returnString = String.format(getMaterial().toString() + "\t Price: %1.2f - Color: %s - Quality: %d", getPrice(), getColor(), getQuality());
+		String returnString = String.format(getName() + "\t Price: %1.2f - Color: %s - Quality: %d", getPrice(), getColor(), getQuality());
 		
 		return returnString;
 	}
 	
 	
 	public static void main(String[] args) {
-		Material m = new Material("S1001", "trocar");
-		MaterialDetail item = new MaterialDetail(m, 20.5, "yellow", 1000);
+		MaterialDetail item = new MaterialDetail("S100", "Trocar", 20.5, "yellow", 1000);
 		System.out.println(item.getPriceS());
 	}
 	

@@ -1,10 +1,23 @@
 package edu.sdccd.cisc191.c;
+import javax.persistence.*;
 
 import java.io.Serializable;
 
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Material implements Serializable {
+	@Id
+	@Column(
+			name = "ID"
+			)
 	private String id;
+	@Column(
+			name = "name",
+			nullable = false,
+			updatable = true
+			)
 	private String name;
+	
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -14,6 +27,7 @@ public class Material implements Serializable {
 	public String getId() {
 		return id;
 	}
+
 	public String getName() {
 		return name;
 	}
